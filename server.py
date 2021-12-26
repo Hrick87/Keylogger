@@ -1,11 +1,11 @@
+#!/usr/bin/env python3
 import re
 import socket
 import tqdm
 import os
-
 # device's IP address
 SERVER_HOST = "0.0.0.0"
-SERVER_PORT = 5002
+SERVER_PORT = 5001
 # receive 4096 bytes each time
 BUFFER_SIZE = 4096
 SEPARATOR = "<SEPARATOR>"
@@ -13,7 +13,6 @@ SEPARATOR = "<SEPARATOR>"
 # create the server socket
 # TCP socket
 s = socket.socket()
-
 # bind the socket to our local address
 s.bind((SERVER_HOST, SERVER_PORT))
 # enabling our server to accept connections

