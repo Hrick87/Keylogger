@@ -6,8 +6,7 @@ import urllib.request
 SEPARATOR = "<SEPARATOR>"
 BUFFER_SIZE = 4096 # send 4096 bytes each time step
 # the ip address or hostname of the server, the receiver
-
-host = socket.gethostname()
+host = '76.88.27.225'
 # the port, let's use 5001
 port = 5001
 #regex pattern searching
@@ -32,6 +31,7 @@ while True:
         else:
             print("closing client socket\n")
             s.close()
+            print("exiting client.py code\n")
             exit()
         
         break                     
@@ -63,7 +63,3 @@ while True:
             print("sent ", bytes_read, " bytes.\n")
             # update the progress bar
             #progress.update(len(bytes_read))
-
-print("closing client socket")
-# close the socket
-s.close()

