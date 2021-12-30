@@ -1,13 +1,13 @@
+#!/usr/bin/env python3
 from tkinter import *
 from subprocess import Popen
 import os
-#!/usr/bin/env python
 root = Tk()
 
 def onClick():
     process = None
     if ServerOnOff['text'] == "Server On":
-        process = Popen(os.path.realpath("server.py"))
+        process = Popen(['python3', os.path.realpath("server.py")])
         ServerOnOff.config(text="Server Off")
     else:
         ServerOnOff.config(text="Server On")

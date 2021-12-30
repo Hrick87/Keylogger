@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import re
 import socket
-import tqdm
 import os
 # device's IP address
 SERVER_HOST = "0.0.0.0"
