@@ -1,5 +1,4 @@
 import socket
-import tqdm
 import os
 import re
 import urllib.request
