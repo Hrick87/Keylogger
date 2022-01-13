@@ -2,11 +2,10 @@ import socket
 import os
 import signal
 # device's IP address
-SERVER_HOST = "0.0.0.0"
-SERVER_PORT = 5003
+SERVER_HOST = ''
+SERVER_PORT = 51001
 # receive 4096 bytes each time
 BUFFER_SIZE = 4096
-SEPARATOR = "<SEPARATOR>"
 
 # create the server socket
 # TCP socket

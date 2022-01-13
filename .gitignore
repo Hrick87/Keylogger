@@ -4,3 +4,4 @@ keylog-*
 **/.vscode/
 build/
 *.spec
+geckodriver.log

