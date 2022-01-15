@@ -92,11 +92,11 @@ def spectrum_port_forward(driver):
     to_start_port.clear()
     to_start_port.send_keys(local_ip)
     from_end_port.clear()
-    from_end_port.send_keys('5003')
+    from_end_port.send_keys('51001')
     service_name_input.clear()
-    service_name_input.send_keys('port5003')
+    service_name_input.send_keys('port51001')
     from_start_port.clear()
-    from_start_port.send_keys('5003')
+    from_start_port.send_keys('51001')
 
     WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.ID, "confirm")) 
@@ -191,7 +191,7 @@ def xfinity_port_forward(driver):
         pass
 
     WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, "/html/body/div[@id='container']/div[@id='main-content']/div[@id='content']/div[@id='port-triggering-items']/div[@class='module data']/p[@class='button']/a[@id='add-port-trigger']")) 
+        EC.element_to_be_clickable((By.XPATH, "/html/body/div[@id='container']/div[@id='main-content']/div[@id='content']/div[@id='port-triggering-items']/div[@class='module data']/p[@class='button']/a[@id='add-port-trigger']")) 
         )  
     driver.find_element(By.XPATH, "/html/body/div[@id='container']/div[@id='main-content']/div[@id='content']/div[@id='port-triggering-items']/div[@class='module data']/p[@class='button']/a[@id='add-port-trigger']").click()
 
@@ -204,17 +204,17 @@ def xfinity_port_forward(driver):
     to_end_port = driver.find_element(By.ID, "to_end_port")
     
     service_name_input.clear()
-    service_name_input.send_keys('port5003')
+    service_name_input.send_keys('port51001')
     
     from_start_port.clear()
-    from_start_port.send_keys('5003')
+    from_start_port.send_keys('51001')
     from_end_port.clear()
-    from_end_port.send_keys('5003')
+    from_end_port.send_keys('51001')
 
     to_start_port.clear()
-    to_start_port.send_keys('5003')
+    to_start_port.send_keys('51001')
     to_end_port.clear()
-    to_end_port.send_keys('5003')
+    to_end_port.send_keys('51001')
 
     driver.find_element(By.ID, "btn-save-add").click()    
 

@@ -2,7 +2,7 @@ import socket
 import os
 import signal
 # device's IP address
-SERVER_HOST = ''
+SERVER_HOST = '0.0.0.0'
 SERVER_PORT = 51001
 # receive 4096 bytes each time
 BUFFER_SIZE = 4096
