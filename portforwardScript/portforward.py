@@ -38,15 +38,18 @@ def get_default_gateway_linux():
             return socket.inet_ntoa(struct.pack("<L", int(fields[2], 16)))
 
 def ignoreCertWarning(driver):
-    WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.ID, "details-button")) 
-    )  
-    driver.find_element(By.ID, "details-button").click()
-    
-    WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.ID, "proceed-link")) 
-    )  
-    driver.find_element(By.ID, "proceed-link").click()
+    try:
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, "details-button")) 
+        )  
+        driver.find_element(By.ID, "details-button").click()
+        
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, "proceed-link")) 
+        )  
+        driver.find_element(By.ID, "proceed-link").click()
+    except:
+        pass
 
 def spectrum_port_forward(driver):
     try:
@@ -195,19 +198,18 @@ def xfinity_port_forward(driver):
         driver.find_element(By.XPATH, "/html/body/div[@id='container']/div[@id='main-content']/div[@id='content']/form/div[@class='module']/div[@class='select-row disabled']/span[@id='pt_switch']/ul[@id='port-triggering-switch']/a[1]/li[@class='radioswitch_on']/label").click()
     except:
         pass
-
-    WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.XPATH, "/html/body/div[@id='container']/div[@id='main-content']/div[@id='content']/div[@id='port-triggering-items']/div[@class='module data']/p[@class='button']/a[@id='add-port-trigger']")) 
-        )  
-    driver.find_element(By.XPATH, "/html/body/div[@id='container']/div[@id='main-content']/div[@id='content']/div[@id='port-triggering-items']/div[@class='module data']/p[@class='button']/a[@id='add-port-trigger']").click()
-
-    time.sleep(3)
     
-    WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.XPATH, "/html/body/div[@id='container']/div[@id='main-content']/div[@id='content']/div[@id='port-triggering-items']/div[@class='module data']/p[@class='button']/a[@id='add-port-trigger']")) 
-        )  
-    driver.find_element(By.XPATH, "/html/body/div[@id='container']/div[@id='main-content']/div[@id='content']/div[@id='port-triggering-items']/div[@class='module data']/p[@class='button']/a[@id='add-port-trigger']").click()
-
+    try:
+        WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "/html/body/div[@id='container']/div[@id='main-content']/div[@id='content']/div[@id='port-triggering-items']/div[@class='module data']/p[@class='button']/a[@id='add-port-trigger']")) 
+            )  
+        driver.find_element(By.XPATH, "/html/body/div[@id='container']/div[@id='main-content']/div[@id='content']/div[@id='port-triggering-items']/div[@class='module data']/p[@class='button']/a[@id='add-port-trigger']").click()
+    except:
+        WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "/html/body/div[@id='container']/div[@id='main-content']/div[@id='content']/div[@id='port-triggering-items']/div[@class='module data']/p[@class='button']/a[@id='add-port-trigger']")) 
+            )  
+        driver.find_element(By.XPATH, "/html/body/div[@id='container']/div[@id='main-content']/div[@id='content']/div[@id='port-triggering-items']/div[@class='module data']/p[@class='button']/a[@id='add-port-trigger']").click()
+        pass
 
     service_name_input = driver.find_element(By.ID, "service_name")
     from_start_port = driver.find_element(By.ID, "from_start_port")
@@ -334,8 +336,6 @@ def saveIPtoGMAIL(driver):
     driver.quit()
 
 if __name__=="__main__":
-    #Set router of client
-    router = "Xfinity"
 
     #get default gateway of router
     defaultGateway = get_default_gateway_linux()
@@ -345,14 +345,21 @@ if __name__=="__main__":
     chrome_options = Options()
 
     chrome_options.add_experimental_option("detach", True)
+    chrome_options.headless = True
+    chrome_options.add_argument('--ignore-certificate-errors')
+    chrome_options.add_argument('--allow-running-insecure-content')
+    user_agent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/60.0.3112.50 Safari/537.36'
+    chrome_options.add_argument(f'user-agent={user_agent}')
    
     # Pass in the `Service` instance with the `service` keyword: 
     driver = webdriver.Chrome(service=service, options=chrome_options)
     
+    #Set router of client
+    router = "Xfinity"
+
     #go to routers login
     if router != "Skip":
         driver.get("https://" + defaultGateway)
-
         ignoreCertWarning(driver)
 
     if router == "Spectrum":
@@ -370,5 +377,3 @@ if __name__=="__main__":
     externalIP = getPublicIP()
     
     saveIPtoGMAIL(driver)
-
-
