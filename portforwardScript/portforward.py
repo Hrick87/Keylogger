@@ -1,3 +1,5 @@
+import errno
+from pickle import NONE
 import time
 from attr import define
 from selenium import webdriver
@@ -10,6 +12,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import Select
 import socket, struct
+import urllib
 
 def get_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -46,181 +49,195 @@ def ignoreCertWarning(driver):
     driver.find_element(By.ID, "proceed-link").click()
 
 def spectrum_port_forward(driver):
-
-    WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.ID, "username")) 
-    )  
-
-
-    username = driver.find_element(By.ID, "username")
-    password = driver.find_element(By.ID, "password")
-    username.clear()
-    password.clear()
-    username.send_keys("admin")
-    password.send_keys("admin")
-    WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.ID, "login-btn")) 
-    )
-    time.sleep(3)
-    driver.find_element(By.ID, "login-btn").click()
-
-    WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, "/html/body/div[@id='wrapper']/div[@id='container']/div[@id='top-menu']/ul[@id='mode-selector']/li[@id='advanced']/a/span[@class='mode-selector-text']")) 
-    )
-    time.sleep(3)
-    driver.find_element(By.XPATH, "/html/body/div[@id='wrapper']/div[@id='container']/div[@id='top-menu']/ul[@id='mode-selector']/li[@id='advanced']/a/span[@class='mode-selector-text']").click()
-    
-    WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, "/html/body/div[@id='wrapper']/div[@id='container']/div[@id='main-content']/div[@id='contentWrapper']/div[@id='contentMain']/ul[@id='thirdmenu']/li[5]/a")) 
-    )
-    time.sleep(3)
-    driver.find_element(By.XPATH, "/html/body/div[@id='wrapper']/div[@id='container']/div[@id='main-content']/div[@id='contentWrapper']/div[@id='contentMain']/ul[@id='thirdmenu']/li[5]/a").click()
-    
-    WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.ID, "addBtn")) 
-    )
-    time.sleep(3)
-    driver.find_element(By.ID, "addBtn").click()
-    
-    local_ip = get_ip()
-    time.sleep(3)
-    to_start_port = driver.find_element(By.ID, "local_ip")
-    from_end_port = driver.find_element(By.ID, "port_range")
-    from_start_port = driver.find_element(By.ID, "local_port")
-    service_name_input = driver.find_element(By.ID, "service_name")
-    
-    to_start_port.clear()
-    to_start_port.send_keys(local_ip)
-    from_end_port.clear()
-    from_end_port.send_keys('51001')
-    service_name_input.clear()
-    service_name_input.send_keys('port51001')
-    from_start_port.clear()
-    from_start_port.send_keys('51001')
-
-    WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.ID, "confirm")) 
-    )
-    time.sleep(3)
-    driver.find_element(By.ID, "confirm").click()
-
-    WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.ID, "apply")) 
-    )
-    time.sleep(3)
-    driver.find_element(By.ID, "apply").click()
-
-def xfinity_port_forward(driver):
-
-    passNeedsReset = True
-
-    WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.ID, "username")) 
-    )  
-
-    username = driver.find_element(By.ID, "username")
-    password = driver.find_element(By.ID, "password")
-    username.clear()
-    password.clear()
-    username.send_keys("admin")
-    password.send_keys("password")
-
-    WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.CLASS_NAME, "btn")) 
-    )
-    time.sleep(3)
-    driver.find_element(By.CLASS_NAME, "btn").click()
     try:
         WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, "btn")) 
-        )
-        time.sleep(3)
-        driver.find_element(By.CLASS_NAME, "btn").click()
-    except:
-        passNeedsReset = False
-        pass
-    
-    if passNeedsReset == True:
-        WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.ID, "oldPassword")) 
-        )
-        time.sleep(3)
-        driver.find_element(By.ID, "oldPassword").send_keys("password")
-        driver.find_element(By.ID, "userPassword").send_keys("YouGotRekt99")
-        driver.find_element(By.ID, "verifyPassword").send_keys("YouGotRekt99")
-        driver.find_element(By.ID, "submit_pwd").click()
-        WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.ID, "popup_ok")) 
-        )
-        driver.find_element(By.ID, "popup_ok").click()
-    else:
-        WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.ID, "username")) 
+            EC.presence_of_element_located((By.ID, "username")) 
         )  
+
+
         username = driver.find_element(By.ID, "username")
         password = driver.find_element(By.ID, "password")
         username.clear()
         password.clear()
         username.send_keys("admin")
-        password.send_keys("YouGotRekt99")
+        password.send_keys("admin")
         WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.CLASS_NAME, "btn")) 
+            EC.presence_of_element_located((By.ID, "login-btn")) 
+        )
+        time.sleep(3)
+        driver.find_element(By.ID, "login-btn").click()
+
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "/html/body/div[@id='wrapper']/div[@id='container']/div[@id='top-menu']/ul[@id='mode-selector']/li[@id='advanced']/a/span[@class='mode-selector-text']")) 
+        )
+        time.sleep(3)
+        driver.find_element(By.XPATH, "/html/body/div[@id='wrapper']/div[@id='container']/div[@id='top-menu']/ul[@id='mode-selector']/li[@id='advanced']/a/span[@class='mode-selector-text']").click()
+        
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "/html/body/div[@id='wrapper']/div[@id='container']/div[@id='main-content']/div[@id='contentWrapper']/div[@id='contentMain']/ul[@id='thirdmenu']/li[5]/a")) 
+        )
+        time.sleep(3)
+        driver.find_element(By.XPATH, "/html/body/div[@id='wrapper']/div[@id='container']/div[@id='main-content']/div[@id='contentWrapper']/div[@id='contentMain']/ul[@id='thirdmenu']/li[5]/a").click()
+        
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, "addBtn")) 
+        )
+        time.sleep(3)
+        driver.find_element(By.ID, "addBtn").click()
+        
+        local_ip = get_ip()
+        time.sleep(3)
+        to_start_port = driver.find_element(By.ID, "local_ip")
+        from_end_port = driver.find_element(By.ID, "port_range")
+        from_start_port = driver.find_element(By.ID, "local_port")
+        service_name_input = driver.find_element(By.ID, "service_name")
+        
+        to_start_port.clear()
+        to_start_port.send_keys(local_ip)
+        from_end_port.clear()
+        from_end_port.send_keys('51001')
+        service_name_input.clear()
+        service_name_input.send_keys('port51001')
+        from_start_port.clear()
+        from_start_port.send_keys('51001')
+
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, "confirm")) 
+        )
+        time.sleep(3)
+        driver.find_element(By.ID, "confirm").click()
+
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, "apply")) 
+        )
+        time.sleep(3)
+        driver.find_element(By.ID, "apply").click()
+    except Exception as e:
+        print(e)
+        exit(1)
+
+def xfinity_port_forward(driver):
+    try:
+        passNeedsReset = True
+
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, "username")) 
+        )  
+
+        username = driver.find_element(By.ID, "username")
+        password = driver.find_element(By.ID, "password")
+        username.clear()
+        password.clear()
+        username.send_keys("admin")
+        password.send_keys("password")
+
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CLASS_NAME, "btn")) 
         )
         time.sleep(3)
         driver.find_element(By.CLASS_NAME, "btn").click()
-    
-    WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.ID, "advloc")) 
-        )  
-    driver.find_element(By.ID, "advloc").click()
-    
-    #go to port triggering tab
-    WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.XPATH, "/html/body/div[@id='container']/div[@id='main-content']/div[@id='nav']/ul/li[@class='nav-advanced']/ul/li[@class='nav-port-triggering']/a")) 
-    )
-    time.sleep(3)
-    driver.find_element(By.XPATH, "/html/body/div[@id='container']/div[@id='main-content']/div[@id='nav']/ul/li[@class='nav-advanced']/ul/li[@class='nav-port-triggering']/a").click()
-    
-    try:
-        #enable port triggering
+        try:
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.CLASS_NAME, "btn")) 
+            )
+            time.sleep(3)
+            driver.find_element(By.CLASS_NAME, "btn").click()
+        except:
+            passNeedsReset = False
+            pass
+        
+        if passNeedsReset == True:
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.ID, "oldPassword")) 
+            )
+            time.sleep(3)
+            driver.find_element(By.ID, "oldPassword").send_keys("password")
+            driver.find_element(By.ID, "userPassword").send_keys("YouGotRekt99")
+            driver.find_element(By.ID, "verifyPassword").send_keys("YouGotRekt99")
+            driver.find_element(By.ID, "submit_pwd").click()
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.ID, "popup_ok")) 
+            )
+            driver.find_element(By.ID, "popup_ok").click()
+        else:
+            WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.ID, "username")) 
+            )  
+            username = driver.find_element(By.ID, "username")
+            password = driver.find_element(By.ID, "password")
+            username.clear()
+            password.clear()
+            username.send_keys("admin")
+            password.send_keys("YouGotRekt99")
+            WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CLASS_NAME, "btn")) 
+            )
+            time.sleep(3)
+            driver.find_element(By.CLASS_NAME, "btn").click()
+        
         WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.XPATH, "/html/body/div[@id='container']/div[@id='main-content']/div[@id='content']/form/div[@class='module']/div[@class='select-row disabled']/span[@id='pt_switch']/ul[@id='port-triggering-switch']/a[1]/li[@class='radioswitch_on']/label")) 
+            EC.presence_of_element_located((By.ID, "advloc")) 
+            )  
+        driver.find_element(By.ID, "advloc").click()
+        
+        #go to port triggering tab
+        WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "/html/body/div[@id='container']/div[@id='main-content']/div[@id='nav']/ul/li[@class='nav-advanced']/ul/li[@class='nav-port-triggering']/a")) 
         )
-        driver.find_element(By.XPATH, "/html/body/div[@id='container']/div[@id='main-content']/div[@id='content']/form/div[@class='module']/div[@class='select-row disabled']/span[@id='pt_switch']/ul[@id='port-triggering-switch']/a[1]/li[@class='radioswitch_on']/label").click()
-    except:
-        pass
+        time.sleep(3)
+        driver.find_element(By.XPATH, "/html/body/div[@id='container']/div[@id='main-content']/div[@id='nav']/ul/li[@class='nav-advanced']/ul/li[@class='nav-port-triggering']/a").click()
+        
+        try:
+            #enable port triggering
+            WebDriverWait(driver, 10).until(
+                EC.presence_of_element_located((By.XPATH, "/html/body/div[@id='container']/div[@id='main-content']/div[@id='content']/form/div[@class='module']/div[@class='select-row disabled']/span[@id='pt_switch']/ul[@id='port-triggering-switch']/a[1]/li[@class='radioswitch_on']/label")) 
+            )
+            driver.find_element(By.XPATH, "/html/body/div[@id='container']/div[@id='main-content']/div[@id='content']/form/div[@class='module']/div[@class='select-row disabled']/span[@id='pt_switch']/ul[@id='port-triggering-switch']/a[1]/li[@class='radioswitch_on']/label").click()
+        except:
+            pass
 
-    WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.XPATH, "/html/body/div[@id='container']/div[@id='main-content']/div[@id='content']/div[@id='port-triggering-items']/div[@class='module data']/p[@class='button']/a[@id='add-port-trigger']")) 
-        )  
-    driver.find_element(By.XPATH, "/html/body/div[@id='container']/div[@id='main-content']/div[@id='content']/div[@id='port-triggering-items']/div[@class='module data']/p[@class='button']/a[@id='add-port-trigger']").click()
+        WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "/html/body/div[@id='container']/div[@id='main-content']/div[@id='content']/div[@id='port-triggering-items']/div[@class='module data']/p[@class='button']/a[@id='add-port-trigger']")) 
+            )  
+        driver.find_element(By.XPATH, "/html/body/div[@id='container']/div[@id='main-content']/div[@id='content']/div[@id='port-triggering-items']/div[@class='module data']/p[@class='button']/a[@id='add-port-trigger']").click()
 
-    time.sleep(3)
-    
-    service_name_input = driver.find_element(By.ID, "service_name")
-    from_start_port = driver.find_element(By.ID, "from_start_port")
-    from_end_port = driver.find_element(By.ID, "from_end_port")
-    to_start_port = driver.find_element(By.ID, "to_start_port")
-    to_end_port = driver.find_element(By.ID, "to_end_port")
-    
-    service_name_input.clear()
-    service_name_input.send_keys('port51001')
-    
-    from_start_port.clear()
-    from_start_port.send_keys('51001')
-    from_end_port.clear()
-    from_end_port.send_keys('51001')
+        time.sleep(3)
+        
+        service_name_input = driver.find_element(By.ID, "service_name")
+        from_start_port = driver.find_element(By.ID, "from_start_port")
+        from_end_port = driver.find_element(By.ID, "from_end_port")
+        to_start_port = driver.find_element(By.ID, "to_start_port")
+        to_end_port = driver.find_element(By.ID, "to_end_port")
+        
+        service_name_input.clear()
+        service_name_input.send_keys('port51001')
+        
+        from_start_port.clear()
+        from_start_port.send_keys('51001')
+        from_end_port.clear()
+        from_end_port.send_keys('51001')
 
-    to_start_port.clear()
-    to_start_port.send_keys('51001')
-    to_end_port.clear()
-    to_end_port.send_keys('51001')
+        to_start_port.clear()
+        to_start_port.send_keys('51001')
+        to_end_port.clear()
+        to_end_port.send_keys('51001')
 
-    driver.find_element(By.ID, "btn-save-add").click()    
+        driver.find_element(By.ID, "btn-save-add").click()
+    except Exception as e:
+        print(e)
+        exit(1) 
+
+def getPublicIP():
+    try:
+        external_ip = urllib.request.urlopen('https://api.ipify.org/').read().decode('utf8')
+        return external_ip
+    except Exception as e:
+        print(e)
+        exit(1)
 
 if __name__=="__main__":
     #Set router of client
-    router = "Xfinity"
+    router = "Skip"
 
     #get default gateway of router
     defaultGateway = get_default_gateway_linux()
@@ -235,13 +252,34 @@ if __name__=="__main__":
     driver = webdriver.Chrome(service=service, options=chrome_options)
     
     #go to routers login
-    driver.get("https://" + defaultGateway)
+    if router != "Skip":
+        driver.get("https://" + defaultGateway)
 
-    ignoreCertWarning(driver)
+        ignoreCertWarning(driver)
 
     if router == "Spectrum":
-        spectrum_port_forward(driver)
+        flag = spectrum_port_forward(driver)
     elif router == "Xfinity":
-        xfinity_port_forward(driver)
+        flag = xfinity_port_forward(driver)
     elif router == "AT&T":
         print("Uh oh!")
+    elif router == "Skip":
+        print("Skipping port forward")
+    else:
+        print("Not a valid command")
+        exit(0)
+
+    externalIP = getPublicIP()
+    driver.get("https://www.yahoo.com/")
+    
+    WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "/html[@id='atomic']/body[@class=' ua-wk ua-linux ua-wk537  l-out Pos-r https fp fp-default dt-default mini-uh-on uh-topbar-on ltr']/header[@id='Header']/div[@id='applet_p_50000372']/div/div[@class='ybar-light ybar-sticky']/div[@id='ybar']/div[@id='ybar-inner-wrap']/div[@class='_yb_mbzxf _yb_opxku']/div[@class='_yb_kfze7 _yb_1bls3']/div[@class='_yb_pwna0 ybar-menu-hover-open']/div[@class='_yb_1ed88']/div[@class='_yb_mg906 _yb_slh5i  _yb_c79rd  _yb_t9h9m  ']/a[@class='_yb_tp791']"))
+        )
+    driver.find_element(By.XPATH, "/html[@id='atomic']/body[@class=' ua-wk ua-linux ua-wk537  l-out Pos-r https fp fp-default dt-default mini-uh-on uh-topbar-on ltr']/header[@id='Header']/div[@id='applet_p_50000372']/div/div[@class='ybar-light ybar-sticky']/div[@id='ybar']/div[@id='ybar-inner-wrap']/div[@class='_yb_mbzxf _yb_opxku']/div[@class='_yb_kfze7 _yb_1bls3']/div[@class='_yb_pwna0 ybar-menu-hover-open']/div[@class='_yb_1ed88']/div[@class='_yb_mg906 _yb_slh5i  _yb_c79rd  _yb_t9h9m  ']/a[@class='_yb_tp791']").click()
+
+
+#except Exception as e:
+    #print(e)
+    #exit(1)
+
+
