@@ -1,10 +1,25 @@
 import http.server
 import socketserver
+import socket
 
+def get_ip():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.settimeout(0)
+    try:
+        # doesn't even have to be reachable
+        s.connect(('10.255.255.255', 1))
+        IP = s.getsockname()[0]
+    except Exception:
+        IP = '127.0.0.1'
+    finally:
+        s.close()
+    return IP
 
+localIP = get_ip()
 PORT = 8000
 Handler = http.server.SimpleHTTPRequestHandler
 
-with socketserver.TCPServer(('10.0.0.250', PORT), Handler) as httpd:
+with socketserver.TCPServer((localIP, PORT), Handler) as httpd:
     print("serving at port", PORT)
+    print(localIP)
     httpd.serve_forever()
