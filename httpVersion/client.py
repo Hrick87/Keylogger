@@ -80,6 +80,7 @@ def getPublicIP(driver):
     driver.quit()
 
     return Public_IP
+
 # Use the `install()` method to set `executabe_path` in a new `Service` instance:
 service = Service(executable_path=ChromeDriverManager().install())
 chrome_options = Options()
@@ -94,5 +95,11 @@ driver = webdriver.Chrome(service=service, options=chrome_options)
 driver.get("https://google.com")
 
 Public_IP = getPublicIP(driver)
-print(Public_IP) 
+
+port = '8000'
+
+Public_IP = Public_IP+':'+port
+
+print(Public_IP)
+
 Popen('wget -r {Public_IP}', shell=True)
