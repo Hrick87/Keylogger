@@ -1,1 +1,0 @@
-client.py logs in to gmail grabs the stored public ip address of the victim in the drafts, then uses the ip address and a -wget command to download all files hosted on victims http server at port 8000.

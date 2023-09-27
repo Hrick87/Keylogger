@@ -1,1 +1,0 @@
-portforward.py accesses a victims router configuration by first finding their private IP on the network, then changes the routers password, creates port forward on port 8000. Then it finds that victims public ip address, logs into a predetermined gmail account, stores the private ip in the drafts, then logs the victim out. This gmail will be accessed by securityUpdate.py
